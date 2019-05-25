@@ -11,7 +11,7 @@ tibble(
   y = 1,
   z = x^2 + y
 )
- # Tribble es un function que te crea un tibble pero ingresandolo de otra forma (ampliar)
+ # Tribble es una function que te crea un tibble pero ingresandolo de otra forma (ampliar)
 tribble(
   ~x, ~y, ~z,
   "a", 2, 3.6,
@@ -31,3 +31,33 @@ df[["x"]][1:5]
 
 df[1] # Accedo a la columna número 1
 df[[1]] # Accedo al contenido de la columna 1
+
+df %>% .[["x"]] # Pipes (ampliar)
+df %>% .$x # Same thing
+
+setwd("/Users/martriay/dev/cosi") # Set working directory
+flights <- read_csv("vuelos.csv")
+str(flights) # Decripción de la variable
+
+filter(flights, month == 1, day == 1) # Flitro por lo vuelos del 01/01
+
+filter(flights, (month == 11 | month == 12) & !(dep_delay < 0))
+
+flights = filter(flights, dep_delay < 60)
+arrange(flights, desc(dep_delay)) # Ordenar de mayor a menor x dep_delay
+sub_flights = select(flights, month, day, tailnum, origin, dest, dep_delay) # Seleciono unas columnas para armar otro tibble
+rename(flights, año = year) # Renombrar una columna
+
+sub_flights = mutate(sub_flights, dep_puntual = dep_delay > 0, dep_puntual_grave = dep_delay > 30) # Creo dos columnas nuevas con bitwise operators
+
+agrupar_x_mes = group_by(sub_flights, dest) # Agrupo por destino
+
+summarise(agrupar_x_mes,
+  delay = mean(dep_puntual, na.rm = TRUE),
+  delay_grave = mean(dep_puntual_grave = TRUE),
+  conteo = n() # n es una funcion que cuenta cuantas ocurrenias tiene el tibble
+)
+
+flights %>%
+  select(flights, month, day, tailnum, origin, dest, dep_delay) %>%
+  filter(dep_delay < 30) %>%
