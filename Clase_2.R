@@ -60,9 +60,10 @@ summarise(agrupar_x_mes,
 )
 
 flights %>%
-  select(month, day, tailnum, origin, dest, dep_delay) %>%
+  select(month, day, tailnum, origin, dest, dep_delay, dep_puntual, dep_puntual_grave) %>%
   filter(dep_delay < 30) %>%
   arrange(desc(dep_delay)) %>%
+  mutate(dep_puntual = dep_delay > 0, dep_puntual_grave = dep_delay > 30)
   summarise(
     delay = mean(dep_puntual, na.rm = TRUE),
     delay_grave = mean(dep_puntual_grave = TRUE),
