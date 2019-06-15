@@ -1,3 +1,4 @@
+library(tidyverse)
 ggplot(data = iris) +
   geom_bar(mapping = aes(x = Species))
 
